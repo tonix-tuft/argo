@@ -26,9 +26,50 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Argo\Password;
 
 class HasherTest extends TestCase {
-  public function testTrueEqualsTrue() {
-    $this->assertSame(true, true);
+  public function test hashing and verifying a password works() {
+    $passwordStr = '@bc$ldAlW_0-3989mld';
+    $pepper = 'y7Bz2wutmN6fBBELEAllkICfRhK3j1Tj';
+    $password = new Password();
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $verified = $password->verify($passwordStr, $hashRes);
+
+    $this->assertSame(true, $verified);
+  }
+
+  public function test hashing and verifying a PHP 7_2 password works() {
+    $passwordStr = '@bc$ldAlW_0-3989mld';
+    $pepper = 'y7Bz2wutmN6fBBELEAllkICfRhK3j1Tj';
+    $password = new Password('7.2.0');
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $verified = $password->verify($passwordStr, $hashRes);
+
+    $this->assertSame(true, $verified);
+  }
+
+  public function test two hashes of different passwords are different() {
+    $pepper = 'y7Bz2wutmN6fBBELEAllkICfRhK3j1Tj';
+
+    $passwordStr = '@bc$ldAlW_0-3989mld';
+    $password = new Password();
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $hash1 = $hashRes['hash'];
+
+    $passwordStr = 'abcjlkdsa-021';
+    $password = new Password();
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $hash2 = $hashRes['hash'];
+
+    $this->assertNotSame($hash1, $hash2);
   }
 }
