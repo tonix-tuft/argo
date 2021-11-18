@@ -27,7 +27,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-class SampleTest extends TestCase {
+class HasherTest extends TestCase {
   public function testTrueEqualsTrue() {
     $this->assertSame(true, true);
   }
