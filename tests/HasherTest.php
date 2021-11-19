@@ -41,7 +41,7 @@ class HasherTest extends TestCase {
     $this->assertSame(true, $verified);
   }
 
-  public function test hashing and verifying a PHP 7_2 password works() {
+  public function test hashing and verifying a password in PHP 7_2 works() {
     $passwordStr = '@bc$ldAlW_0-3989mld';
     $pepper = 'y7Bz2wutmN6fBBELEAllkICfRhK3j1Tj';
     $password = new Password('7.2.0');
@@ -71,5 +71,24 @@ class HasherTest extends TestCase {
     $hash2 = $hashRes['hash'];
 
     $this->assertNotSame($hash1, $hash2);
+  }
+
+  public function test hashing a password in PHP 7_2 produces a different hash than hashing the same password in PHP version 7_3 and above() {
+    $passwordStr = '@bc$ldAlW_0-3989mld';
+    $pepper = 'y7Bz2wutmN6fBBELEAllkICfRhK3j1Tj';
+
+    $password = new Password('7.2.0');
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $hash7_2 = $hashRes['hash'];
+
+    $password = new Password();
+    $hashRes = $password->hash($passwordStr, [
+      'pepper' => $pepper,
+    ]);
+    $hash7_3AndAbove = $hashRes['hash'];
+
+    $this->assertNotSame($hash7_2, $hash7_3AndAbove);
   }
 }
