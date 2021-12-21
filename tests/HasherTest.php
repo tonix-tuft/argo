@@ -28,6 +28,9 @@
 use PHPUnit\Framework\TestCase;
 use Argo\Password;
 
+/**
+ * @author Anton Bagdatyev (Tonix) <antonytuft@gmail.com>
+ */
 class HasherTest extends TestCase {
   public function test hashing and verifying a password works() {
     $passwordStr = '@bc$ldAlW_0-3989mld';
